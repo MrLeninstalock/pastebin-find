@@ -7,6 +7,7 @@ import urllib
 import re
 
 # User-defined variables
+# TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between = 7       #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 error_on_cl_args = "Please provide a single regex search via the command line"   #Error to display if improper command line arguments are provided
 
@@ -32,6 +33,7 @@ while(1):
         html_lines = html.split('\n')
         for line in html_lines:
             if counter < 10:
+                # TODO : Use a file of keyword to find
                 if re.search(r'<td><img src=\"/i/t.gif\"  class=\"i_p0\" alt=\"\" border=\"0\" /><a href=\"/[0-9a-zA-Z]{8}">.*</a></td>', line):
                     link_id = line[72:80]
                     #print link_id
