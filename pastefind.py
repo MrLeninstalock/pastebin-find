@@ -20,6 +20,10 @@ else:
 
 iterater = 1
 
+wordlist_file = open("toFind.txt", "r")
+wordlist = wordlist_file.read().split('\n')
+wordlist_file.close()
+
 while(1):
     counter = 0
 
@@ -29,11 +33,13 @@ while(1):
     url = urllib.urlopen("http://pastebin.com/archive")
     html = url.read()
     url.close()
-    
+
     # Capture all pastebin id's
     id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-    id_list.remove("messages")
-    id_list.remove("settings")
+    if "messages" in id_list:
+        id_list.remove("messages")
+    if "settings" in id_list:
+        id_list.remove("settings")
 
     for id in id_list:
         #Begin loading of raw paste text
@@ -42,8 +48,9 @@ while(1):
         url_2.close()
         
         # TODO : Use a file of keyword to find
-        if re.search(r''+search_term, raw_text):
-            print "FOUND " + search_term + " in http://pastebin.com/raw.php?i=" + id
+        for word in wordlist:
+            if re.search(word, raw_text):
+                print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
         
         counter += 1
     iterater += 1
