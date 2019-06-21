@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# Python file to monitor pastebin for pastes containing the passed regex
 import random
 import sys
 import time
@@ -7,42 +6,44 @@ import urllib
 import re
 import logging
 
-# User-defined variables
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between =  20      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
-error_on_cl_args = "Please provide a single regex search via the command line"   #Error to display if improper command line arguments are provided
-
-iterater = 1
-
 cache = []
+counter = 0
+iterator = 0
 
+# Load the word to find file
 wordlist_file = open("toFind.txt", "r")
 wordlist = wordlist_file.read().split('\n')
 wordlist_file.close()
 
 logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-
 logging.info("Started")
 
 while(1):
-    counter = 0
+    iterator += 1
 
-    print "Scanning pastebin - iteration " + str(iterater) + "..."
+    print "Iteration " + str(iterator) + "..."
     
     # Open the recently posted pastes page
     time.sleep(random.uniform(0.5, 1.6))
     url = urllib.urlopen("http://pastebin.com/archive")
     html = url.read()
     url.close()
+    logging.info("Loaded archive page. Iteration %d" % iterator)
 
-    if "(once your IP block has been lifted)" in html:
-        logging.error("Got blocked. Iterator : %d, Counter : %d" % (iterater, counter) )
+    # We can get blocked if doing too much request
+    while "(once your IP block has been lifted)" in html:
+        logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter) )
         print("Blocked")
-        time.sleep(1900)    
+        # Wait 5mn
+        time.sleep(300)    
+    
     else:   
         # Capture all pastebin id's
         id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-        #id_list = ["1","2","3","4","5","6"]
+        
+        # Remove junk that match regex
         if "messages" in id_list:
             id_list.remove("messages")
         if "settings" in id_list:
@@ -51,23 +52,22 @@ while(1):
         for id in id_list:
             print("Actual id : " + id)
             if id not in cache:
+                counter += 1
                 cache.append(id)
+
                 #Begin loading of raw paste text
                 url_2 = urllib.urlopen("https://pastebin.com/raw/" + id)
                 raw_text = url_2.read()
                 url_2.close()
-                #raw_text = open("tmmp", "r").read()
         
-                # TODO : Use a file of keyword to find
                 for word in wordlist:
-                    if re.search(word, raw_text):
+                    if re.search(word, raw_text, re.IGNORECASE):
+                        # TODO Write an extract of what has been found
                         print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
                         f = open("./Found/"+word+".txt", "a")
                         f.write(id + "\n")
                         f.close()
                         logging.info("Found %s", word)
-                counter += 1
-                iterater += 1
             else:
                 print("Not processed id : " + id)  
         time.sleep(time_between)
