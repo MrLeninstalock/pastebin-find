@@ -7,7 +7,7 @@ import re
 import logging
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
-time_between =  20      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
+time_between =  25      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
 counter = 0
 iterator = 0
@@ -16,6 +16,8 @@ iterator = 0
 wordlist_file = open("toFind.txt", "r")
 wordlist = wordlist_file.read().split('\n')
 wordlist_file.close()
+if '' in wordlist:
+    wordlist.remove('')
 
 logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.info("Started")
@@ -26,7 +28,7 @@ while(1):
     print "Iteration " + str(iterator) + "..."
     
     # Open the recently posted pastes page
-    time.sleep(random.uniform(0.5, 1.6))
+    time.sleep(random.uniform(2, 7))
     url = urllib.urlopen("http://pastebin.com/archive")
     html = url.read()
     url.close()
@@ -36,8 +38,8 @@ while(1):
     while "(once your IP block has been lifted)" in html:
         logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter) )
         print("Blocked")
-        # Wait 5mn
-        time.sleep(300)    
+        # Wait 15mn
+        time.sleep(900)    
     
     else:   
         # Capture all pastebin id's
@@ -50,24 +52,23 @@ while(1):
             id_list.remove("settings")
 
         for id in id_list:
-            print("Actual id : " + id)
             if id not in cache:
                 counter += 1
                 cache.append(id)
 
                 #Begin loading of raw paste text
+                time.sleep(random.uniform(0.5, 3))
                 url_2 = urllib.urlopen("https://pastebin.com/raw/" + id)
                 raw_text = url_2.read()
                 url_2.close()
         
                 for word in wordlist:
-                    if re.search(word, raw_text, re.IGNORECASE):
-                        # TODO Write an extract of what has been found
+                    matchs = re.findall(word, raw_text, re.IGNORECASE)
+                    # TODO Write an extract of what has been found
+                    for word in matchs:
                         print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
-                        f = open("./Found/"+word+".txt", "a")
+                        f = open("./Found/"+ word +".txt", "a")
                         f.write(id + "\n")
                         f.close()
                         logging.info("Found %s", word)
-            else:
-                print("Not processed id : " + id)  
         time.sleep(time_between)

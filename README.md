@@ -12,7 +12,8 @@ Regex should be the regex itself in quotes. For example, to search for formatted
 Objectif
 ========
 
-+ Avoid scanning same file numerous time
 + Save extract of findings
 + Make some cool stats (when are the most file uploaded etc)
 + Mail to owner when something is found
++ Check if we have missed something (id found already in cache), if yes, reduce latency, if no, augmente it
++ Log : Only log the moment we are unblocked and the moment we are blocked
