@@ -25,14 +25,14 @@ logging.info("Started")
 while(1):
     iterator += 1
 
-    print "Iteration " + str(iterator) + "..."
-    
+    print "Iteration " + str(iterator) + ". In between time : " + str(time_between) 
+    already_increased = False
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
     url = urllib.urlopen("http://pastebin.com/archive")
     html = url.read()
     url.close()
-    logging.info("Loaded archive page. Iteration %d" % iterator)
+    logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
     # We can get blocked if doing too much request
     while "(once your IP block has been lifted)" in html:
@@ -71,4 +71,9 @@ while(1):
                         f.write(id + "\n")
                         f.close()
                         logging.info("Found %s", word)
+            else:
+                    if not already_increased:
+                        print("Increasing time between")
+                        already_increased = True
+                        time_between = time_between + 1 
         time.sleep(time_between)
