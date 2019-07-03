@@ -7,7 +7,7 @@ import re
 import logging
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
-time_between =  25      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
+time_between = 40      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
 counter = 0
 iterator = 0
@@ -21,11 +21,13 @@ if '' in wordlist:
 
 logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.info("Started")
-
+already_increased = True
 while(1):
     iterator += 1
-
+    
     print "Iteration " + str(iterator) + ". In between time : " + str(time_between) 
+    if not already_increased:
+        time_between = time_between -1
     already_increased = False
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
