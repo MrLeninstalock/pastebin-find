@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import division
 import random
 import sys
 import time
@@ -79,15 +80,19 @@ while(1):
                 for word in wordlist:
                     matchs = re.findall(word, raw_text, re.IGNORECASE)
                     # TODO Write an extract of what has been found
+                    duplicata = []
                     for word in matchs:
-                        print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
-                        f = open("./Found/"+ word +".txt", "a")
-                        f.write(id + "\n")
-                        f.close()
-                        logging.info("Found %s", word)
+                        if word not in duplicata:
+                            duplicata.append(word)
+                            print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
+                            f = open("./Found/"+ word +".txt", "a")
+                            f.write(id + "\n")
+                            f.close()
+                            logging.info("Found %s", word)
             else:
                 already_done += 1
                 increase = True
-        logging.info("Processed %d pastebin. %d were already done (%f%)" % (total, already_done, (already_done/total)))
-        print("Processed %d pastebin. %d were already done (%f%)" % (total, already_done, (already_done/total)))
+        percentage = (already_done/total) * 100
+        logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
+        print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         time.sleep(time_between)
