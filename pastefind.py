@@ -21,14 +21,21 @@ if '' in wordlist:
 
 logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.info("Started")
-already_increased = True
+
+increase = False
+
 while(1):
+    print "Iteration %d. Waiting time : %d" % (iterator, time_between)
+
     iterator += 1
     
-    print "Iteration " + str(iterator) + ". In between time : " + str(time_between) 
-    if not already_increased:
-        time_between = time_between -1
-    already_increased = False
+    if increase:
+        logging.info("Increasing between_time.")
+        time_between = time_between + 1
+    else:
+        logging.info("Decreasing between time.")
+        time_between = time_between - 1
+    
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
     url = urllib.urlopen("http://pastebin.com/archive")
@@ -53,9 +60,14 @@ while(1):
         if "settings" in id_list:
             id_list.remove("settings")
 
+        increase = False
+        already_done = 0
+        total = 0
+
         for id in id_list:
             if id not in cache:
                 counter += 1
+                total += 1
                 cache.append(id)
 
                 #Begin loading of raw paste text
@@ -74,8 +86,8 @@ while(1):
                         f.close()
                         logging.info("Found %s", word)
             else:
-                    if not already_increased:
-                        print("Increasing time between")
-                        already_increased = True
-                        time_between = time_between + 1 
+                already_done += 1
+                increase = True
+        logging.info("Processed %d pastebin. %d were already done (%f%)" % (total, already_done, (already_done/total)))
+        print("Processed %d pastebin. %d were already done (%f%)" % (total, already_done, (already_done/total)))
         time.sleep(time_between)
