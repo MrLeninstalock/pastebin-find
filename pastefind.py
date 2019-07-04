@@ -7,7 +7,7 @@ import re
 import logging
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
-time_between = 40      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
+time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
 counter = 0
 iterator = 0
