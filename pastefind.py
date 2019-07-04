@@ -7,17 +7,48 @@ import urllib
 import re
 import logging
 #from torrest import TorRequest
-#import requests
+import requests
 
 # Tor configuration
 # tor = TorRequest(password='TE4U1FTh13tHL4m8WgfbC8m549cRmh')
 
+bad_proxy = []
+
+def scrap_proxy():
+    url = "https://free-proxy-list.net/"
+    regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
+    proxy_list = []
+
+    response = requests.get(url).text
+    p_list = re.findall(regex, response)
+    
+    for tup in p_list:
+        proxy_list.append(':'.join(tup))
+
+    return proxy_list
+
+# TODO thread this shit so that I always have a fresh list of functionnal proxy
+def get_proxy():
+    proxy_pool = scrap_proxy()
+
+    for proxy in proxy_pool:
+        if proxy not in bad_proxy:
+            try:
+                response = requests.get("https://httpbin.org/ip",proxies={"http": proxy, "https": proxy})
+                return proxy
+            except:
+                print("Skipping")
+                bad_proxy.append(proxy)
+        else:
+            print("Known bad")
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
 counter = 0
 iterator = 0
+increase = False
+blocked = False
 
 # Load the word to find file
 wordlist_file = open("toFind.txt", "r")
@@ -26,12 +57,17 @@ wordlist_file.close()
 if '' in wordlist:
     wordlist.remove('')
 
+# Setting up logger
 logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.info("Started")
 
-increase = False
+# Getting the first proxy
+proxy = get_proxy()
 
 while(1):
+    if blocked:
+        proxy=get_proxy()
+    logging.info("Using proxy : " + proxy)
     print "Iteration %d. Waiting time : %d" % (iterator, time_between)
 
     iterator += 1
@@ -45,18 +81,20 @@ while(1):
     
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
-    url = urllib.urlopen("http://pastebin.com/archive")
-    html = url.read()
-    url.close()
+    try:
+        response = request.get("http://pastebin.com/archive", proxy = proxy)
+    except:
+        logging.info("Proxy error.")
+        print("Have to change proxy")
+        blocked=True
+    html = response.text
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
     # We can get blocked if doing too much request
-    while "(once your IP block has been lifted)" in html:
+    if "(once your IP block has been lifted)" in html:
         logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter) )
         print("Blocked")
-        # Wait 15mn
-        time.sleep(900)    
-    
+        blocked = True
     else:   
         # Capture all pastebin id's
         id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
@@ -79,9 +117,14 @@ while(1):
 
                 #Begin loading of raw paste text
                 time.sleep(random.uniform(0.5, 3))
-                url_2 = urllib.urlopen("https://pastebin.com/raw/" + id)
-                raw_text = url_2.read()
-                url_2.close()
+                try:
+                    response = request.get("https://pastebin.com/raw/" + id, proxy = proxy)
+                except:
+                    blocked = True
+                    logging.info("Proxy error.")
+                    print("Proxy error.")
+                    break
+                raw_text = reponse.text
         
                 for word in wordlist:
                     matchs = re.findall(word, raw_text, re.IGNORECASE)
@@ -102,3 +145,4 @@ while(1):
         logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         time.sleep(time_between)
+
