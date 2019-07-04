@@ -6,6 +6,11 @@ import time
 import urllib
 import re
 import logging
+from torrest import TorRequest
+
+# Tor configuration
+tor = TorRequest(password='TE4U1FTh13tHL4m8WgfbC8m549cRmh')
+
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
@@ -39,17 +44,18 @@ while(1):
     
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
-    url = urllib.urlopen("http://pastebin.com/archive")
-    html = url.read()
+    url = tor.get("http://pastebin.com/archive")
+    html = url.text
     url.close()
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
     # We can get blocked if doing too much request
     while "(once your IP block has been lifted)" in html:
         logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter) )
-        print("Blocked")
+        tor.reset_identity()
+        print("Changed identity")
         # Wait 15mn
-        time.sleep(900)    
+        #time.sleep(900)    
     
     else:   
         # Capture all pastebin id's
@@ -73,8 +79,8 @@ while(1):
 
                 #Begin loading of raw paste text
                 time.sleep(random.uniform(0.5, 3))
-                url_2 = urllib.urlopen("https://pastebin.com/raw/" + id)
-                raw_text = url_2.read()
+                url_2 = tor.get("https://pastebin.com/raw/" + id)
+                raw_text = url_2.text
                 url_2.close()
         
                 for word in wordlist:
