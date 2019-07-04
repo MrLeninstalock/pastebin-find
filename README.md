@@ -13,6 +13,7 @@ Objectif
 ========
 
 + USE TOR TO BE FUCKING ANONYMOUS AND AVOID BEING BLOCKED LIKE A WEIRDO
+  TOR can't be used :(
 + Save extract of findings
 + Make some cool stats (when are the most file uploaded etc)
 + Mail to owner when something is found

@@ -6,7 +6,7 @@ import time
 import urllib
 import re
 import logging
-from torrest import TorRequest
+from torrequest import TorRequest
 
 # Tor configuration
 tor = TorRequest(password='TE4U1FTh13tHL4m8WgfbC8m549cRmh')
@@ -44,8 +44,9 @@ while(1):
     
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
-    url = tor.get("http://pastebin.com/archive")
-    html = url.text
+    url = urllib.urlopen("http://pastebin.com/archive")
+    html = url.read()
+    print html
     url.close()
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
