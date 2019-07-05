@@ -67,10 +67,12 @@ logging.info("Started")
 proxy = get_proxy()
 
 while(1):
+    # If we are blocked, we have to renew the proxy
     if blocked:
         proxy=get_proxy()
+
     logging.info("Using proxy : " + proxy)
-    print "Iteration %d. Waiting time : %d" % (iterator, time_between)
+    print "Iteration %d. Waiting time : %d. Using proxy %s" % (iterator, time_between, proxy)
 
     iterator += 1
     
@@ -82,26 +84,29 @@ while(1):
         time_between = time_between - 1
     
     # Open the recently posted pastes page
-    time.sleep(random.uniform(2, 7))
+    time.sleep(random.uniform(1, 2))
     try:
-        print proxy
         response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text    
     except Exception as e:
-        logging.info("Proxy error : " + str(e.message))
+        logging.info("Proxy error when loading archive page: " + str(e.message))
         print("Proxy error when loading archive page : " + str(e.message))
         blocked=True
+        break
+    
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
     # We can get blocked if doing too much request
     if "(once your IP block has been lifted)" in html:
-        logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter) )
-        print("Blocked")
+        logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
+        print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
         blocked = True
+        break
     else:   
         # Capture all pastebin id's
         id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-        
+        print id_list
+
         # Remove junk that match regex
         if "messages" in id_list:
             id_list.remove("messages")
@@ -111,7 +116,8 @@ while(1):
         increase = False
         already_done = 0
         total = 0
-        print id_list
+        raw_text = ""
+
         for id in id_list:
             if id not in cache:
                 counter += 1
@@ -119,15 +125,15 @@ while(1):
                 cache.append(id)
 
                 #Begin loading of raw paste text
-                time.sleep(random.uniform(0.5, 3))
+                time.sleep(random.uniform(0.5, 2))
                 try:
                     response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                    raw_text = response.text
                 except Exception as e:
                     blocked = True
                     logging.info("Proxy error : " +str(e.message))
                     print("Proxy error : " + str(e.message))
                     break
-                raw_text = reponse.text
         
                 for word in wordlist:
                     matchs = re.findall(word, raw_text, re.IGNORECASE)
