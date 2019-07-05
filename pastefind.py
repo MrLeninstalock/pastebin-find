@@ -34,7 +34,7 @@ def get_proxy():
         if proxy not in bad_proxy:
             try:
                 response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
-                if "If you are at an office or shared network, you can ask the" in response.text:
+                if ("If you are at an office or shared network, you can ask the" or "500 Internal") in response.text:
                     bad_proxy.append(proxy)
                     break
                 print response.text
