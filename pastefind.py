@@ -19,16 +19,20 @@ error_message= [
 ]
 
 def scrap_proxy():
-    url = "https://free-proxy-list.net/"
-    regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
+    #url = "https://free-proxy-list.net/"
+    #regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
+    url = "http://www.idcloak.com/proxylist/elite-proxy-list.html"
+    regex = '<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+    
     proxy_list = []
 
     response = requests.get(url).text
     p_list = re.findall(regex, response)
     
     for tup in p_list:
-        proxy_list.append(':'.join(tup))
+        proxy_list.append(':'.join(tup[::-1]))
 
+    print proxy_list
     return proxy_list
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
