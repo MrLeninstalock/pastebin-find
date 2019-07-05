@@ -84,11 +84,13 @@ while(1):
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
     try:
+        print proxy
         response = request.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text    
-    except:
+    except Exception as e:
+        print e.message
         logging.info("Proxy error.")
-        print("Have to change proxy")
+        print("Proxy error when loading archive page")
         blocked=True
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
