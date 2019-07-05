@@ -88,9 +88,8 @@ while(1):
         response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text    
     except Exception as e:
-        print e.message
-        logging.info("Proxy error.")
-        print("Proxy error when loading archive page")
+        logging.info("Proxy error : " + e.message)
+        print("Proxy error when loading archive page : " + e.message)
         blocked=True
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
@@ -123,10 +122,10 @@ while(1):
                 time.sleep(random.uniform(0.5, 3))
                 try:
                     response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
-                except:
+                except Exception as e:
                     blocked = True
-                    logging.info("Proxy error.")
-                    print("Proxy error.")
+                    logging.info("Proxy error : " + e.message)
+                    print("Proxy error : " + e.message)
                     break
                 raw_text = reponse.text
         
