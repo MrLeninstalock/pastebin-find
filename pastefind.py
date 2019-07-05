@@ -35,20 +35,25 @@ def scrap_proxy():
 def get_proxy():
     proxy_pool = scrap_proxy()
     for proxy in proxy_pool:
+        bad = False
         if proxy not in bad_proxy:
             try:
                 response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
                 for msg in error_message:
+                    print msg
                     if msg in response.text:
                         bad_proxy.append(proxy)
+                        bad = True
                         break
-                print response.text
-                return proxy
+                if not bad:
+                    #print response.text
+                    return proxy
             except:
                 print("Skipping")
                 bad_proxy.append(proxy)
         else:
-            print("Known bad")
+            pass
+            #print("Known bad")
 
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
@@ -85,10 +90,10 @@ while(1):
     
     if increase:
         logging.info("Increasing between_time.")
-        time_between = time_between + 1
+        #time_between = time_between + 1
     else:
         logging.info("Decreasing between time.")
-        time_between = time_between - 1
+        #time_between = time_between - 1
     
     # Open the recently posted pastes page
     time.sleep(random.uniform(1, 2))
@@ -134,8 +139,11 @@ while(1):
                     #Begin loading of raw paste text
                     time.sleep(random.uniform(0.5, 2))
                     try:
-                        response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                        response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy})
                         raw_text = response.text
+                        #print "------------------------------"
+                        #print raw_text
+                        #print "------------------------------"
                     except Exception as e:
                         blocked = True
                         logging.info("Proxy error : " +str(e.message))
