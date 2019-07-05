@@ -34,7 +34,7 @@ def get_proxy():
     for proxy in proxy_pool:
         if proxy not in bad_proxy:
             try:
-                response = requests.get("https://httpbin.org/ip",proxies={"http": proxy, "https": proxy}, timeout=5)
+                response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
                 print response.text
                 return proxy
             except:
