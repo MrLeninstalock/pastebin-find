@@ -30,7 +30,6 @@ def scrap_proxy():
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
     proxy_pool = scrap_proxy()
-    print proxy_pool
     for proxy in proxy_pool:
         if proxy not in bad_proxy:
             try:
