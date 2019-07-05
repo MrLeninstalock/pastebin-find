@@ -32,7 +32,6 @@ def scrap_proxy():
     for tup in p_list:
         proxy_list.append(':'.join(tup[::-1]))
 
-    print proxy_list
     return proxy_list
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
