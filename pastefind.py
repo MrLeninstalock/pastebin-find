@@ -92,70 +92,69 @@ while(1):
         logging.info("Proxy error when loading archive page: " + str(e.message))
         print("Proxy error when loading archive page : " + str(e.message))
         blocked=True
-        break
-    
-    logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
-
-    # We can get blocked if doing too much request
-    if "(once your IP block has been lifted)" in html:
-        logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
-        print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
-        blocked = True
-        break
-    else:   
-        # Capture all pastebin id's
-        id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-        print id_list
-
-        # Remove junk that match regex
-        if "messages" in id_list:
-            id_list.remove("messages")
-        if "settings" in id_list:
-            id_list.remove("settings")
-
-        increase = False
-        already_done = 0
-        total = 0
-        raw_text = ""
-
-        for id in id_list:
-            if id not in cache:
-                counter += 1
-                total += 1
-                cache.append(id)
-
-                #Begin loading of raw paste text
-                time.sleep(random.uniform(0.5, 2))
-                try:
-                    response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
-                    raw_text = response.text
-                except Exception as e:
-                    blocked = True
-                    logging.info("Proxy error : " +str(e.message))
-                    print("Proxy error : " + str(e.message))
-                    break
+    if not blocked:
         
-                for word in wordlist:
-                    matchs = re.findall(word, raw_text, re.IGNORECASE)
-                    # TODO Write an extract of what has been found
-                    duplicata = []
-                    for word in matchs:
-                        if word not in duplicata:
-                            duplicata.append(word)
-                            print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
-                            f = open("./Found/"+ word +".txt", "a")
-                            f.write(id + "\n")
-                            f.close()
-                            logging.info("Found %s", word)
+        logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
+
+        # We can get blocked if doing too much request
+        if "(once your IP block has been lifted)" in html:
+            logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
+            print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
+            blocked = True
+            break
+        else:   
+            # Capture all pastebin id's
+            id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
+            print id_list
+
+            # Remove junk that match regex
+            if "messages" in id_list:
+                id_list.remove("messages")
+            if "settings" in id_list:
+                id_list.remove("settings")
+
+            increase = False
+            already_done = 0
+            total = 0
+            raw_text = ""
+
+            for id in id_list:
+                if id not in cache:
+                    counter += 1
+                    total += 1
+                    cache.append(id)
+
+                    #Begin loading of raw paste text
+                    time.sleep(random.uniform(0.5, 2))
+                    try:
+                        response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                        raw_text = response.text
+                    except Exception as e:
+                        blocked = True
+                        logging.info("Proxy error : " +str(e.message))
+                        print("Proxy error : " + str(e.message))
+                        break
+            
+                    for word in wordlist:
+                        matchs = re.findall(word, raw_text, re.IGNORECASE)
+                        # TODO Write an extract of what has been found
+                        duplicata = []
+                        for word in matchs:
+                            if word not in duplicata:
+                                duplicata.append(word)
+                                print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
+                                f = open("./Found/"+ word +".txt", "a")
+                                f.write(id + "\n")
+                                f.close()
+                                logging.info("Found %s", word)
+                else:
+                    already_done += 1
+                    increase = True
+            if total > 0:
+                percentage = (already_done/total) * 100
             else:
-                already_done += 1
-                increase = True
-        if total > 0:
-            percentage = (already_done/total) * 100
-        else:
-            percentage = 0
-        logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
-        print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
-        if blocked:
+                percentage = 0
+            logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
+            print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
             time.sleep(time_between)
 
