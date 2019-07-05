@@ -34,7 +34,8 @@ def get_proxy():
     for proxy in proxy_pool:
         if proxy not in bad_proxy:
             try:
-                response = requests.get("https://httpbin.org/ip",proxies={"http": proxy, "https": proxy})
+                response = requests.get("https://httpbin.org/ip",proxies={"http": proxy, "https": proxy}, timeout=5)
+                print response.text
                 return proxy
             except:
                 print("Skipping")
@@ -49,6 +50,7 @@ counter = 0
 iterator = 0
 increase = False
 blocked = False
+html = ""
 
 # Load the word to find file
 wordlist_file = open("toFind.txt", "r")
@@ -83,11 +85,11 @@ while(1):
     time.sleep(random.uniform(2, 7))
     try:
         response = request.get("http://pastebin.com/archive", proxy = proxy)
+        html = response.text    
     except:
         logging.info("Proxy error.")
         print("Have to change proxy")
         blocked=True
-    html = response.text
     logging.info("Loaded archive page. Iteration %d. Time beetween : %d" % (iterator, time_between))
 
     # We can get blocked if doing too much request
@@ -141,7 +143,10 @@ while(1):
             else:
                 already_done += 1
                 increase = True
-        percentage = (already_done/total) * 100
+        if total > 0:
+            percentage = (already_done/total) * 100
+        else:
+            percentage = 0
         logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         time.sleep(time_between)
