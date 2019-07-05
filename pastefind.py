@@ -85,7 +85,7 @@ while(1):
     time.sleep(random.uniform(2, 7))
     try:
         print proxy
-        response = request.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
+        response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text    
     except Exception as e:
         print e.message
@@ -112,7 +112,7 @@ while(1):
         increase = False
         already_done = 0
         total = 0
-
+        print id_list
         for id in id_list:
             if id not in cache:
                 counter += 1
@@ -122,7 +122,7 @@ while(1):
                 #Begin loading of raw paste text
                 time.sleep(random.uniform(0.5, 3))
                 try:
-                    response = request.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                    response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
                 except:
                     blocked = True
                     logging.info("Proxy error.")
@@ -151,5 +151,6 @@ while(1):
             percentage = 0
         logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
         print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
-        time.sleep(time_between)
+        if blocked:
+            time.sleep(time_between)
 
