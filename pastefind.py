@@ -84,7 +84,7 @@ while(1):
     # Open the recently posted pastes page
     time.sleep(random.uniform(2, 7))
     try:
-        response = request.get("http://pastebin.com/archive", proxy = proxy)
+        response = request.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text    
     except:
         logging.info("Proxy error.")
@@ -120,7 +120,7 @@ while(1):
                 #Begin loading of raw paste text
                 time.sleep(random.uniform(0.5, 3))
                 try:
-                    response = request.get("https://pastebin.com/raw/" + id, proxy = proxy)
+                    response = request.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
                 except:
                     blocked = True
                     logging.info("Proxy error.")
