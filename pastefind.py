@@ -133,11 +133,12 @@ while(1):
 
                 increase = False
                 already_done = 0
-                total = 0
+                processed = 0
+                total = len(id_list)
                 raw_text = ""
                 print("Processing found pastebin...")
                 for id in id_list:
-                    replaceLine("Processing pastebin %d/%d" % (id_list.index(id), len(id_list)))
+                    replaceLine("Processing pastebin %d/%d" % (id_list.index(id), total))
                     if id not in cache:
                         counter += 1
                         total += 1
@@ -148,6 +149,7 @@ while(1):
                         try:
                             response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
                             raw_text = response.text
+                            processed += 1
                         except Exception as e:
                             blocked = True
                             logging.info("Proxy error : " +str(e.message))
@@ -167,13 +169,12 @@ while(1):
                                     logging.info("Found %s", word)
                     else:
                         already_done += 1
+                        processed += 1
                         increase = True
-                if total > 0:
-                    percentage = (already_done/total) * 100
-                else:
-                    percentage = 0
-                logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
-                print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
+                already_percentage = (already_done/total) * 100
+                processed_percentage = (processed/total) * 100
+                logging.info("Processed %f of pastebin. %f were already done (%f percent)" % (processed_percentage, already_percentage))
+                print("Processed %f of pastebin. %f were already done (%f percent)" % (processed_percentage, already_percentage))
                 if not blocked:
                     time.sleep(time_between)
             else:
