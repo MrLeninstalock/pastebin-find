@@ -177,15 +177,9 @@ while(1):
                 if not blocked:
                     time.sleep(time_between)
             else:
-<<<<<<< HEAD
                 # Error when loading archive page
                 blocked = True
-                break
-=======
-            # Error when loading archive page
-            blocked = True
             
->>>>>>> 05b873984758343d9fdba8d86573acc94a7f860c
         else:
             # Got ban
             logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
