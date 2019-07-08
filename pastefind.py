@@ -158,7 +158,6 @@ while(1):
                         print("Proxy error : " + str(e.message))
                         break
                     print(datetime.datetime.now())
-                    print(" ")
                     for word in wordlist:
                         matchs = re.findall(word, raw_text, re.IGNORECASE)
                         # TODO Write an extract of what has been found
@@ -172,6 +171,8 @@ while(1):
                                 f.close()
                                 logging.info("Found %s", word)
                     print(datetime.datetime.now())
+                    print(" ")
+
                 else:
                     already_done += 1
                     increase = True
