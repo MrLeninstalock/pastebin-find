@@ -124,7 +124,7 @@ while(1):
         if "(once your IP block has been lifted)" not in html:
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-            if len(id_list) > 0
+            if len(id_list) > 0:
                 # Remove junk that match regex
                 if "messages" in id_list:
                     id_list.remove("messages")
@@ -177,9 +177,9 @@ while(1):
                 if not blocked:
                     time.sleep(time_between)
             else:
-            # Error when loading archive page
-            blocked = True
-            break
+                # Error when loading archive page
+                blocked = True
+                break
         else:
             # Got ban
             logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
