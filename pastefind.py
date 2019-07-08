@@ -18,6 +18,11 @@ error_message= [
     "If you are at an office or shared network, you can ask"
 ]
 
+def replaceLine(new):
+    sys.stdout.write("\033[F") #back to previous line
+    sys.stdout.write("\033[K") #clear line
+    print(new)
+
 def scrap_proxy():
     #url = "https://free-proxy-list.net/"
     #regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
@@ -121,7 +126,7 @@ while(1):
         else:   
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-            print id_list
+            #print id_list
 
             # Remove junk that match regex
             if "messages" in id_list:
@@ -133,8 +138,9 @@ while(1):
             already_done = 0
             total = 0
             raw_text = ""
-
+            print("Processing found pastebin...")
             for id in id_list:
+                replaceLine("Processing pastebin %d/%d" % (id_list.index(id), total))
                 if id not in cache:
                     counter += 1
                     total += 1
