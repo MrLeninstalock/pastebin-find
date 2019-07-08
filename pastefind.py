@@ -111,7 +111,8 @@ while(1):
     time.sleep(random.uniform(1, 2))
     try:
         response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
-        html = response.text    
+        html = response.text 
+        print html   
     except Exception as e:
         logging.info("Proxy error when loading archive page: " + str(e.message))
         print("Proxy error when loading archive page : " + str(e.message))
@@ -129,7 +130,7 @@ while(1):
         elif html is not "NONE" and "Host Not Found" not in html:   
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-
+            
             # Remove junk that match regex
             if "messages" in id_list:
                 id_list.remove("messages")
