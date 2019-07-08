@@ -184,4 +184,6 @@ while(1):
             print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
             if not blocked:
                 time.sleep(time_between)
+        else:
+            blocked = True
 
