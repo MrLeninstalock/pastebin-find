@@ -112,7 +112,6 @@ while(1):
     try:
         response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text 
-        print html   
     except Exception as e:
         logging.info("Proxy error when loading archive page: " + str(e.message))
         print("Proxy error when loading archive page : " + str(e.message))
