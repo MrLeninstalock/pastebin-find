@@ -150,14 +150,16 @@ while(1):
                     #Begin loading of raw paste text
                     time.sleep(random.uniform(0.1, 1))
                     try:
+                        print(datetime.datetime.now())
                         response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                        print(datetime.datetime.now())
+                        print(" ")
                         raw_text = response.text
                     except Exception as e:
                         blocked = True
                         logging.info("Proxy error : " +str(e.message))
                         print("Proxy error : " + str(e.message))
                         break
-                    print(datetime.datetime.now())
                     for word in wordlist:
                         matchs = re.findall(word, raw_text, re.IGNORECASE)
                         # TODO Write an extract of what has been found
@@ -170,8 +172,7 @@ while(1):
                                 f.write(id + "\n")
                                 f.close()
                                 logging.info("Found %s", word)
-                    print(datetime.datetime.now())
-                    print(" ")
+                    
 
                 else:
                     already_done += 1
