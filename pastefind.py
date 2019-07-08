@@ -88,6 +88,7 @@ logging.info("Started")
 proxy = get_proxy()
 logging.info("Using proxy : %s" % proxy)
 while(1):
+    html = "NONE"
     # If we are blocked, we have to renew the proxy
     if blocked:
         proxy=get_proxy()
@@ -125,7 +126,7 @@ while(1):
             print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
             blocked = True
             break
-        else:   
+        elif html is not "NONE":   
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
             #print id_list
