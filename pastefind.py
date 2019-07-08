@@ -86,15 +86,14 @@ logging.info("Started")
 
 # Getting the first proxy
 proxy = get_proxy()
-
+logging.info("Using proxy : %s" % proxy)
 while(1):
     # If we are blocked, we have to renew the proxy
     if blocked:
         proxy=get_proxy()
+        logging.info("Using proxy : %s" % proxy)
+        print("Using proxy : %s" % proxy)
         blocked = False
-
-    logging.info("Using proxy : " + proxy)
-    print "Iteration %d. Waiting time : %d. Using proxy %s" % (iterator, time_between, proxy)
 
     iterator += 1
     
