@@ -179,10 +179,10 @@ while(1):
             else:
             # Error when loading archive page
             blocked = True
-            break
+            
         else:
             # Got ban
             logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
             print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
             blocked = True
-            break
+            
