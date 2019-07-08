@@ -129,7 +129,8 @@ while(1):
         elif html is not "NONE":   
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-            #print id_list
+            print html
+            print id_list
 
             # Remove junk that match regex
             if "messages" in id_list:
