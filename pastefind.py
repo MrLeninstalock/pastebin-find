@@ -173,8 +173,8 @@ while(1):
                         increase = True
                 already_percentage = (already_done/total) * 100
                 processed_percentage = (processed/total) * 100
-                logging.info("Processed %f of pastebin. %f were already done (%f percent)" % (processed_percentage, already_percentage))
-                print("Processed %f of pastebin. %f were already done (%f percent)" % (processed_percentage, already_percentage))
+                logging.info("Processed %f of pastebin. %f were already done" % (processed_percentage, already_percentage))
+                print("Processed %f of pastebin. %f were already done" % (processed_percentage, already_percentage))
                 if not blocked:
                     time.sleep(time_between)
             else:
