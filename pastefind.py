@@ -147,7 +147,7 @@ while(1):
                     cache.append(id)
 
                     #Begin loading of raw paste text
-                    time.sleep(random.uniform(0.5, 2))
+                    time.sleep(random.uniform(0.1, 1))
                     try:
                         response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy})
                         raw_text = response.text
