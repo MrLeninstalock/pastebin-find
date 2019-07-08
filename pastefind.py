@@ -99,10 +99,12 @@ while(1):
     iterator += 1
     
     if increase:
-        logging.info("Increasing between_time.")
+        pass
+        #logging.info("Increasing between_time.")
         #time_between = time_between + 1
     else:
-        logging.info("Decreasing between time.")
+        pass
+        #logging.info("Decreasing between time.")
         #time_between = time_between - 1
     
     # Open the recently posted pastes page
@@ -150,10 +152,7 @@ while(1):
                     #Begin loading of raw paste text
                     time.sleep(random.uniform(0.1, 1))
                     try:
-                        print(datetime.datetime.now())
                         response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
-                        print(datetime.datetime.now())
-                        print(" ")
                         raw_text = response.text
                     except Exception as e:
                         blocked = True
