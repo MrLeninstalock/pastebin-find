@@ -141,6 +141,8 @@ while(1):
             print("Processing found pastebin...")
             for id in id_list:
                 replaceLine("Processing pastebin %d/%d" % (id_list.index(id), total))
+                print total
+                print id_list.index(id)
                 if id not in cache:
                     counter += 1
                     total += 1
