@@ -141,7 +141,6 @@ while(1):
                     replaceLine("Processing pastebin %d/%d" % (id_list.index(id), total))
                     if id not in cache:
                         counter += 1
-                        total += 1
                         cache.append(id)
 
                         #Begin loading of raw paste text
