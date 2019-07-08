@@ -8,6 +8,7 @@ import re
 import logging
 #from torrest import TorRequest
 import requests
+import datetime
 
 # Tor configuration
 # tor = TorRequest(password='TE4U1FTh13tHL4m8WgfbC8m549cRmh')
@@ -149,17 +150,14 @@ while(1):
                     #Begin loading of raw paste text
                     time.sleep(random.uniform(0.1, 1))
                     try:
-                        response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy})
+                        response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
                         raw_text = response.text
-                        #print "------------------------------"
-                        #print raw_text
-                        #print "------------------------------"
                     except Exception as e:
                         blocked = True
                         logging.info("Proxy error : " +str(e.message))
                         print("Proxy error : " + str(e.message))
                         break
-            
+                    print(datetime.datetime.now())
                     for word in wordlist:
                         matchs = re.findall(word, raw_text, re.IGNORECASE)
                         # TODO Write an extract of what has been found
@@ -172,6 +170,7 @@ while(1):
                                 f.write(id + "\n")
                                 f.close()
                                 logging.info("Found %s", word)
+                    print(datetime.datetime.now())
                 else:
                     already_done += 1
                     increase = True
@@ -181,5 +180,6 @@ while(1):
                 percentage = 0
             logging.info("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
             print("Processed %d pastebin. %d were already done (%f percent)" % (total, already_done, percentage))
-            time.sleep(time_between)
+            if not blocked:
+                time.sleep(time_between)
 
