@@ -43,13 +43,13 @@ def get_proxy():
             try:
                 response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
                 for msg in error_message:
-                    print msg
                     if msg in response.text:
                         bad_proxy.append(proxy)
                         bad = True
                         break
                 if not bad:
-                    #print response.text
+                    print "Good proxy found : %s" % proxy
+                    logging.info("Good proxy found : %s" % proxy)
                     return proxy
             except:
                 print("Skipping")
@@ -85,6 +85,7 @@ while(1):
     # If we are blocked, we have to renew the proxy
     if blocked:
         proxy=get_proxy()
+        blocked = False
 
     logging.info("Using proxy : " + proxy)
     print "Iteration %d. Waiting time : %d. Using proxy %s" % (iterator, time_between, proxy)
