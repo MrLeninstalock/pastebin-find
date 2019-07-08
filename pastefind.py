@@ -126,11 +126,9 @@ while(1):
             print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
             blocked = True
             break
-        elif html is not "NONE":   
+        elif html is not "NONE" and "Host Not Found" not in html:   
             # Capture all pastebin id's
             id_list = re.findall('href="\/([a-zA-Z1-9]{8})"', html)
-            print html
-            print id_list
 
             # Remove junk that match regex
             if "messages" in id_list:
