@@ -25,6 +25,7 @@ def replaceLine(new):
     print(new)
 
 def scrap_proxy():
+    print("Scraping proxy")
     #url = "https://free-proxy-list.net/"
     #regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
     url = "http://www.idcloak.com/proxylist/elite-proxy-list.html"
@@ -37,33 +38,34 @@ def scrap_proxy():
     
     for tup in p_list:
         proxy_list.append(':'.join(tup[::-1]))
-
+    #print proxy_list
     return proxy_list
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
-    proxy_pool = scrap_proxy()
-    for proxy in proxy_pool:
-        bad = False
-        if proxy not in bad_proxy:
-            try:
-                response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
-                for msg in error_message:
-                    if msg in response.text:
-                        bad_proxy.append(proxy)
-                        bad = True
-                        break
-                if not bad:
-                    print "Good proxy found : %s" % proxy
-                    logging.info("Good proxy found : %s" % proxy)
-                    return proxy
-            except:
-                print("Skipping")
-                bad_proxy.append(proxy)
-        else:
-            pass
-            #print("Known bad")
-
+    while 1:
+        proxy_pool = scrap_proxy()
+        for proxy in proxy_pool:
+            bad = False
+            if proxy not in bad_proxy:
+                try:
+                    response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
+                    for msg in error_message:
+                        if msg in response.text:
+                            bad_proxy.append(proxy)
+                            bad = True
+                            break
+                        if not bad:
+                            #print "Good proxy found : %s" % proxy
+                            #logging.info("Good proxy found : %s" % proxy)
+                            return proxy
+                except:
+                    print("Skipping")
+                    bad_proxy.append(proxy)
+            else:
+                pass
+                #print("Known bad")
+    
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
 time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
@@ -81,7 +83,7 @@ if '' in wordlist:
     wordlist.remove('')
 
 # Setting up logger
-logging.basicConfig(filename="log",level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename="log",level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.info("Started")
 
 # Getting the first proxy
@@ -113,8 +115,9 @@ while(1):
         response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
         html = response.text 
     except Exception as e:
-        logging.info("Proxy error when loading archive page: " + str(e.message))
-        print("Proxy error when loading archive page : " + str(e.message))
+        logging.error("Proxy error when loading archive page: " + str(e.message))
+        #print("Proxy error when loading archive page : " + str(e.message))
+        print("Blocked loading archive page")
         blocked=True
     if not blocked:
         
@@ -151,8 +154,8 @@ while(1):
                             processed += 1
                         except Exception as e:
                             blocked = True
-                            logging.info("Proxy error : " +str(e.message))
-                            print("Proxy error : " + str(e.message))
+                            logging.error("Proxy error : " +str(e.message))
+                            #print("Proxy error : " + str(e.message))
                             break
                         for word in wordlist:
                             matchs = re.findall(word, raw_text, re.IGNORECASE)
@@ -178,6 +181,7 @@ while(1):
                     time.sleep(time_between)
             else:
                 # Error when loading archive page
+                print("Error loading id list")
                 blocked = True
             
         else:
