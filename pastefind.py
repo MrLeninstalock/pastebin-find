@@ -184,11 +184,13 @@ while(1):
             else:
                 # Error when loading archive page
                 print("Error loading id list")
+                bad_proxy.append(proxy)
                 blocked = True
             
         else:
             # Got ban
             logging.error("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
             print("Blocked. Iterator : %d, Counter : %d" % (iterator, counter))
+            bad_proxy.append(proxy)
             blocked = True
             
