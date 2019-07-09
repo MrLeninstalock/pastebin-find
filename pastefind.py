@@ -118,6 +118,7 @@ while(1):
         logging.error("Proxy error when loading archive page: " + str(e.message))
         #print("Proxy error when loading archive page : " + str(e.message))
         print("Blocked loading archive page")
+        bad_proxy.append(proxy)
         blocked=True
     if not blocked:
         
@@ -155,6 +156,7 @@ while(1):
                         except Exception as e:
                             blocked = True
                             logging.error("Proxy error : " +str(e.message))
+                            bad_proxy.append(proxy)
                             #print("Proxy error : " + str(e.message))
                             break
                         for word in wordlist:
