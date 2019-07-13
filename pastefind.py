@@ -37,9 +37,14 @@ def scrap_proxy():
     p_list = re.findall(regex, response)
     
     for tup in p_list:
-        proxy_list.append(':'.join(tup[::-1]))
+        proxy = ':'.join(tup[::-1])
+        if proxy not in bad_proxy:
+            proxy_list.append()
     #print proxy_list
-    return proxy_list
+    if len(proxy_list) == 0:
+        print("Proxy list empty. Change proxy site !")
+    else:
+        return proxy_list
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
@@ -68,7 +73,7 @@ def get_proxy():
                 #print("Known bad")
     
 # TODO : Use a config file : https://docs.python.org/2/library/configparser.html
-time_between = 50      #Seconds between iterations (not including time used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
+time_between = 50      #Seconds between iterations (not including tetime used to fetch pages - setting below 5s may cause a pastebin IP block, too high may miss pastes)
 cache = []
 counter = 0
 iterator = 0
