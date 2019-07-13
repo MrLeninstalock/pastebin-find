@@ -64,7 +64,9 @@ def get_proxy():
                         if not bad:
                             #print "Good proxy found : %s" % proxy
                             #logging.info("Good proxy found : %s" % proxy)
+                            print response.message
                             return proxy
+
                 except:
                     #print("Skipping")
                     bad_proxy.append(proxy)
