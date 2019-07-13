@@ -54,6 +54,7 @@ def get_proxy():
             bad = False
             if proxy not in bad_proxy:
                 try:
+                    print proxy
                     response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
                     for msg in error_message:
                         if msg in response.text:
