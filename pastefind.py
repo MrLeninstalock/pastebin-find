@@ -18,7 +18,7 @@ error_message= [
     "500 Internal",
     "If you are at an office or shared network, you can ask"
 ]
-
+# Dict from where to scrap proxy
 proxy_to_scrap = {
     "http://www.idcloak.com/proxylist/elite-proxy-list.html":'<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',
     "https://free-proxy-list.net/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
@@ -28,7 +28,10 @@ def replaceLine(new):
     sys.stdout.write("\033[F") #back to previous line
     sys.stdout.write("\033[K") #clear line
     print(new)
-
+'''
+Go through a few websites and scrap free proxy from them.
+Try to only scrap elite free proxy
+'''
 def scrap_proxy():
     #print("Scraping proxy")
     for key in proxy_to_scrap: 
@@ -41,7 +44,11 @@ def scrap_proxy():
         p_list = re.findall(regex, response)
         
         for tup in p_list:
-            proxy = ':'.join(tup[::-1])
+            if '.' in str(tup[0]):
+               proxy = ':'.join(tup)
+            else:
+                proxy = ':'.join(tup[::-1])
+
             if proxy not in bad_proxy:
                 proxy_list.append(proxy)
         if len(proxy_list) == 0:
