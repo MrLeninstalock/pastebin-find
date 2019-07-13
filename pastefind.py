@@ -19,6 +19,11 @@ error_message= [
     "If you are at an office or shared network, you can ask"
 ]
 
+proxy_to_scrap = {
+    "http://www.idcloak.com/proxylist/elite-proxy-list.html":'<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',
+    "https://free-proxy-list.net/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
+}
+
 def replaceLine(new):
     sys.stdout.write("\033[F") #back to previous line
     sys.stdout.write("\033[K") #clear line
@@ -26,24 +31,24 @@ def replaceLine(new):
 
 def scrap_proxy():
     #print("Scraping proxy")
-    #url = "https://free-proxy-list.net/"
-    #regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
-    url = "http://www.idcloak.com/proxylist/elite-proxy-list.html"
-    regex = '<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-    
-    proxy_list = []
+    for key in proxy_to_scrap: 
+        url = key
+        regex = proxy_to_scrap[key]
 
-    response = requests.get(url).text
-    p_list = re.findall(regex, response)
-    
-    for tup in p_list:
-        proxy = ':'.join(tup[::-1])
-        if proxy not in bad_proxy:
-            proxy_list.append(proxy)
-    if len(proxy_list) == 0:
-        print("Proxy list empty. Change proxy site !")
-    else:
-        return proxy_list
+        proxy_list = []
+
+        response = requests.get(url).text
+        p_list = re.findall(regex, response)
+        
+        for tup in p_list:
+            proxy = ':'.join(tup[::-1])
+            if proxy not in bad_proxy:
+                proxy_list.append(proxy)
+        if len(proxy_list) == 0:
+            print("Proxy list empty. Change proxy site !")
+        else:
+            return proxy_list
+    print("Wown nothing found !")
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
