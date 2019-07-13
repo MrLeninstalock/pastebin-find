@@ -12,7 +12,7 @@ import datetime
 
 # Tor configuration
 # tor = TorRequest(password='TE4U1FTh13tHL4m8WgfbC8m549cRmh')
-
+end_color = "\033[0m"
 bad_proxy = []
 error_message= [
     "500 Internal",
@@ -166,7 +166,7 @@ while(1):
                             for word in matchs:
                                 if word not in duplicata:
                                     duplicata.append(word)
-                                    print "FOUND " + word + " in http://pastebin.com/raw.php?i=" + id
+                                    print("\033[92m FOUND " + word + " in http://pastebin.com/raw.php?i=" + id + end_color)
                                     f = open("./Found/"+ word +".txt", "a")
                                     f.write(id + "\n")
                                     f.close()
