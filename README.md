@@ -19,3 +19,4 @@ Objectif
 + Mail to owner when something is found
 + Check if we have missed something (id found already in cache), if yes, reduce latency, if no, augmente it
 + Log : Only log the moment we are unblocked and the moment we are blocked
++ Print in differents color  depending on the event
