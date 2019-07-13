@@ -40,7 +40,6 @@ def scrap_proxy():
         proxy = ':'.join(tup[::-1])
         if proxy not in bad_proxy:
             proxy_list.append(proxy)
-    print proxy_list
     if len(proxy_list) == 0:
         print("Proxy list empty. Change proxy site !")
     else:
@@ -58,6 +57,7 @@ def get_proxy():
                     response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
                     for msg in error_message:
                         if msg in response.text:
+                            print("Error")
                             bad_proxy.append(proxy)
                             bad = True
                             break
@@ -68,7 +68,7 @@ def get_proxy():
                             return proxy
 
                 except:
-                    #print("Skipping")
+                    print("Skipping")
                     bad_proxy.append(proxy)
             else:
                 pass
