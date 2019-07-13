@@ -40,7 +40,7 @@ def scrap_proxy():
         proxy = ':'.join(tup[::-1])
         if proxy not in bad_proxy:
             proxy_list.append(proxy)
-    #print proxy_list
+    print proxy_list
     if len(proxy_list) == 0:
         print("Proxy list empty. Change proxy site !")
     else:
