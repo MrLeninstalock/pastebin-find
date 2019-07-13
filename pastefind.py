@@ -25,7 +25,7 @@ def replaceLine(new):
     print(new)
 
 def scrap_proxy():
-    print("Scraping proxy")
+    #print("Scraping proxy")
     #url = "https://free-proxy-list.net/"
     #regex = "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
     url = "http://www.idcloak.com/proxylist/elite-proxy-list.html"
@@ -43,6 +43,7 @@ def scrap_proxy():
 
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
+    print("Looking for proxy ...")
     while 1:
         proxy_pool = scrap_proxy()
         for proxy in proxy_pool:
@@ -60,7 +61,7 @@ def get_proxy():
                             #logging.info("Good proxy found : %s" % proxy)
                             return proxy
                 except:
-                    print("Skipping")
+                    #print("Skipping")
                     bad_proxy.append(proxy)
             else:
                 pass
