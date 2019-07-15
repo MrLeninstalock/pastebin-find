@@ -67,7 +67,7 @@ def get_proxy():
             if proxy not in bad_proxy:
                 try:
                     print proxy
-                    response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=5)
+                    response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=10)
                     for msg in error_message:
                         if msg in response.text:
                             print("Error")
@@ -82,7 +82,6 @@ def get_proxy():
 
                 except Exception as e:
                     print("Skipping")
-                    print e.message
                     bad_proxy.append(proxy)
             else:
                 pass
