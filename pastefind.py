@@ -80,8 +80,9 @@ def get_proxy():
                             print response.message
                             return proxy
 
-                except:
+                except Exception as e:
                     print("Skipping")
+                    print e.message
                     bad_proxy.append(proxy)
             else:
                 pass
