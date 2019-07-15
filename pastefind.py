@@ -21,7 +21,9 @@ error_message= [
 # Dict from where to scrap proxy
 proxy_to_scrap = {
     "http://www.idcloak.com/proxylist/elite-proxy-list.html":'<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',
-    "https://free-proxy-list.net/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})"
+    "https://free-proxy-list.net/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})",
+    "https://www.sslproxies.org/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{2,6})",
+    "https://eliteproxy.net/elite-proxy/":'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) <img src="https:\/\/eliteproxy.net\/images\/blank.gif" alt=" EliteProxy\.net"><\/td><td>(\d{2,3})'  
 }
 
 def replaceLine(new):
