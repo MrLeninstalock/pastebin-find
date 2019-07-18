@@ -70,7 +70,7 @@ def get_proxy():
             if proxy not in bad_proxy:
                 try:
                     print proxy
-                    response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=10)
+                    response = requests.get("http://pastebin.com/",proxies={"http": proxy, "https": proxy}, timeout=10)
                     print response
                     print("-------------------------")
                     time.sleep(4)
