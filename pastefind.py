@@ -64,7 +64,27 @@ def scrap_proxy():
 def get_proxy():
     print("Looking for proxy ...")
     for line in open("good.txt", "r").readlines():
-        print line.strip()
+        proxy = line.strip()
+        try:
+            response = requests.get("http://pastebin.com/archives",proxies={"http": proxy, "https": proxy}, timeout=10)
+            time.sleep(4)
+            for msg in error_message:
+                if msg in response.text:
+                    bad_proxy.append(proxy)
+                    bad = True
+                    break
+                if not bad:
+                    #print "Good proxy found : %s" % proxy
+                    #logging.info("Good proxy found : %s" % proxy)
+                    good_file = open('good.txt', 'a+')
+                    good_file.write(proxy + '\n')
+                    good_file.close()
+                    return proxy
+
+        except Exception as e:
+            print("Skipping")
+            bad_proxy.append(proxy)
+
     while 1:
         proxy_pool = scrap_proxy()
         for proxy in proxy_pool:
@@ -139,7 +159,7 @@ while(1):
     # Open the recently posted pastes page
     time.sleep(random.uniform(1, 2))
     try:
-        response = requests.get("http://pastebin.com/archive", proxies={"http": proxy, "https": proxy}, timeout=5)
+        response = requests.get("http://pastebin.com/archives", proxies={"http": proxy, "https": proxy}, timeout=10)
         html = response.text 
     except Exception as e:
         logging.error("Proxy error when loading archive page: " + str(e.message))
