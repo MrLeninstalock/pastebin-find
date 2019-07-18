@@ -69,28 +69,22 @@ def get_proxy():
             bad = False
             if proxy not in bad_proxy:
                 try:
-                    print proxy
                     response = requests.get("http://pastebin.com/",proxies={"http": proxy, "https": proxy}, timeout=10)
-                    print response.text
-                    print("-------------------------")
                     time.sleep(4)
                     for msg in error_message:
                         if msg in response.text:
-                            print("Error")
                             bad_proxy.append(proxy)
                             bad = True
                             break
                         if not bad:
                             #print "Good proxy found : %s" % proxy
                             #logging.info("Good proxy found : %s" % proxy)
-                            print response.text
+                            good_file = open('good.txt', 'a+')
+                            good_file.write(proxy + '\n')
                             return proxy
 
                 except Exception as e:
                     print("Skipping")
-                    print e.message
-                    print("-----------------")
-                    time.sleep(1)
                     bad_proxy.append(proxy)
             else:
                 pass
@@ -180,7 +174,7 @@ while(1):
                         #Begin loading of raw paste text
                         time.sleep(random.uniform(0.1, 1))
                         try:
-                            response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=5)
+                            response = requests.get("https://pastebin.com/raw/" + id, proxies={"http": proxy, "https": proxy}, timeout=10)
                             raw_text = response.text
                             processed += 1
                         except Exception as e:
