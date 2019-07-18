@@ -63,8 +63,8 @@ def scrap_proxy():
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
     print("Looking for proxy ...")
-    for line in open("good.txt", "r").readlines().strip():
-        print line
+    for line in open("good.txt", "r").readlines():
+        print line.strip()
     while 1:
         proxy_pool = scrap_proxy()
         for proxy in proxy_pool:
