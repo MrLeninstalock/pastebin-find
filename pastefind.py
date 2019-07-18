@@ -71,7 +71,7 @@ def get_proxy():
                 try:
                     print proxy
                     response = requests.get("http://pastebin.com/",proxies={"http": proxy, "https": proxy}, timeout=10)
-                    print response.message
+                    print response.text
                     print("-------------------------")
                     time.sleep(4)
                     for msg in error_message:
@@ -83,7 +83,7 @@ def get_proxy():
                         if not bad:
                             #print "Good proxy found : %s" % proxy
                             #logging.info("Good proxy found : %s" % proxy)
-                            print response.message
+                            print response.text
                             return proxy
 
                 except Exception as e:
