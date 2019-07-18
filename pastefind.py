@@ -88,6 +88,9 @@ def get_proxy():
 
                 except Exception as e:
                     print("Skipping")
+                    print e.message
+                    print("-----------------")
+                    time.sleep(1)
                     bad_proxy.append(proxy)
             else:
                 pass
