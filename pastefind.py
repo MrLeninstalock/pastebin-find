@@ -23,7 +23,8 @@ proxy_to_scrap = {
     "http://www.idcloak.com/proxylist/elite-proxy-list.html":'<td>(\d{2,5})<\/td><td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})',
     "https://free-proxy-list.net/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{3,5})",
     "https://www.sslproxies.org/":"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/td><td>(\d{2,6})",
-    "https://eliteproxy.net/elite-proxy/":'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) <img src="https:\/\/eliteproxy.net\/images\/blank.gif" alt=" EliteProxy\.net"><\/td><td>(\d{2,3})'  
+    "https://eliteproxy.net/elite-proxy/":'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) <img src="https:\/\/eliteproxy.net\/images\/blank.gif" alt=" EliteProxy\.net"><\/td><td>(\d{2,3})',
+    "https://premiumproxy.net/elite-proxy-list": "(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{2,6})"
 }
 
 def replaceLine(new):
@@ -70,6 +71,9 @@ def get_proxy():
                 try:
                     print proxy
                     response = requests.get("http://pastebin.com/archive",proxies={"http": proxy, "https": proxy}, timeout=10)
+                    print response
+                    print("-------------------------")
+                    time.sleep(4)
                     for msg in error_message:
                         if msg in response.text:
                             print("Error")
