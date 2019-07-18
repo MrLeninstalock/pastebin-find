@@ -71,7 +71,7 @@ def get_proxy():
                 try:
                     print proxy
                     response = requests.get("http://pastebin.com/",proxies={"http": proxy, "https": proxy}, timeout=10)
-                    print response
+                    print response.message
                     print("-------------------------")
                     time.sleep(4)
                     for msg in error_message:
