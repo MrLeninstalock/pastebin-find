@@ -63,13 +63,15 @@ def scrap_proxy():
 # TODO thread this shit so that I always have a fresh list of functionnal proxy
 def get_proxy():
     print("Looking for proxy ...")
+    for line in open("good.txt", "r").read():
+        print line
     while 1:
         proxy_pool = scrap_proxy()
         for proxy in proxy_pool:
             bad = False
             if proxy not in bad_proxy:
                 try:
-                    response = requests.get("http://pastebin.com/",proxies={"http": proxy, "https": proxy}, timeout=10)
+                    response = requests.get("http://pastebin.com/archives",proxies={"http": proxy, "https": proxy}, timeout=10)
                     time.sleep(4)
                     for msg in error_message:
                         if msg in response.text:
@@ -81,6 +83,7 @@ def get_proxy():
                             #logging.info("Good proxy found : %s" % proxy)
                             good_file = open('good.txt', 'a+')
                             good_file.write(proxy + '\n')
+                            good_file.close()
                             return proxy
 
                 except Exception as e:
